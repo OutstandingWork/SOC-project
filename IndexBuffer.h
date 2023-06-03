@@ -1,5 +1,5 @@
 #pragma once
-#pragma once
+
 class IndexBuffer
 {
 private:

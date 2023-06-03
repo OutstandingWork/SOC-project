@@ -3,6 +3,8 @@
 #include<GL/glew.h>
 #include "Renderer.h"
 #include<cstdlib>
+#include<stdexcept>
+
 struct VertexBufferElement
 {
 	static unsigned int GetSizeOfType(unsigned int type) {
@@ -13,7 +15,7 @@ struct VertexBufferElement
 		case GL_UNSIGNED_BYTE:			return 1;
 			
 		}
-		ASSERT(false);
+		
 		return 0;
 	}
 	unsigned int type;
@@ -32,8 +34,9 @@ public:
 
 	template<typename T>
 	void Push(unsigned int count)
-	{
-		static_assert(false);
+	{   
+		
+		
 	}
 	template<>
 	void Push<float>(unsigned int count)
