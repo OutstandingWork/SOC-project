@@ -13,6 +13,11 @@
 #include "Renderer1.h"
 
 
+void Renderer1::clear() const
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void Renderer1::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const
 {
     shader.Bind();

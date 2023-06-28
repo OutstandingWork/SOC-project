@@ -14,5 +14,6 @@
 class Renderer1
 {
 public:
+    void clear() const;
     void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
 };
