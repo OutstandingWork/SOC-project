@@ -87,12 +87,9 @@ int main(void)
 
     IndexBuffer ib(indices, 6);
 
-    glm::mat4 proj = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, -1.0f, 1.0f);
+    
 
-
-
-
-
+   
     Shader shader("res/shaders/Basic.shader");
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.8, 0.3f, 0.8f, 1.0f);
@@ -127,16 +124,25 @@ int main(void)
         /* Render here */
         renderer1.clear();
 
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(400, 300, 0));
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        glm::mat4 view = glm::mat4(1.0f);
+       
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+        glm::mat4 proj;
+        proj = glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 100.0f);
 
 
 
-        glm::mat4 mvp = proj * model;
+
+        glm::mat4 mvp = proj *view* model;
 
 
         shader.Bind();
-        shader.SetUniform4f("u_Color", 0.1, 0.3f, 0.8f, 1.0f);
+        shader.SetUniform4f("u_Color", 0.9, 0.3f, 0.8f, 1.0f);
 
 
         shader.SetUniformMat4f("u_MVP", mvp);
