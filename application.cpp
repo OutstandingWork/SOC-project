@@ -1,4 +1,4 @@
- #include <GL/glew.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include<sstream>
@@ -39,8 +39,8 @@ int main(void)
 
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(960, 540, "Hello World", NULL, NULL);
-    
-    
+
+
     if (!window)
     {
         glfwTerminate();
@@ -61,45 +61,45 @@ int main(void)
         200.0f,200.0f,1.0f,1.0f,
         100.0f, 200.0f,0.0f,1.0f };
 
-    unsigned int indices[] = { 0,1,2 
-        ,2,3,0};
+    unsigned int indices[] = { 0,1,2
+        ,2,3,0 };
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     glEnable(GL_BLEND);
 
     unsigned int vao;
     GLCall(glGenVertexArrays(1, &vao));
     GLCall(glBindVertexArray(vao));
-    
+
 
     VertexArray va;
     VertexBuffer vb(position, 4 * 4 * sizeof(float));
     VertexBufferLayout layout;
-    
-   
-    
+
+
+
     layout.Push<float>(2);
     layout.Push<float>(2);
-    va.AddBuffer(vb,layout);
-    
-    
-    
-    
+    va.AddBuffer(vb, layout);
+
+
+
+
 
     IndexBuffer ib(indices, 6);
-    
-    glm::mat4 proj = glm::ortho(0.0f,1920.0f ,0.0f, 1080.0f, -1.0f, 1.0f);
-    
-    
-    
-    
-   
+
+    glm::mat4 proj = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, -1.0f, 1.0f);
+
+
+
+
+
     Shader shader("res/shaders/Basic.shader");
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.8, 0.3f, 0.8f, 1.0f);
-    
+
     Texture texture("res/textures/Proj stage 3.png");
     texture.Bind();
-    shader.SetUniform1i("u_Texture",0);
+    shader.SetUniform1i("u_Texture", 0);
 
 
     va.Unbind();
@@ -117,7 +117,7 @@ int main(void)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    
+
 
 
     Renderer1 renderer1;
@@ -126,28 +126,28 @@ int main(void)
     {
         /* Render here */
         renderer1.clear();
-        
+
         glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(400, 300, 0));
         model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
 
 
-       glm::mat4 mvp = proj * model;
+        glm::mat4 mvp = proj * model;
 
 
         shader.Bind();
         shader.SetUniform4f("u_Color", 0.1, 0.3f, 0.8f, 1.0f);
 
-        
+
         shader.SetUniformMat4f("u_MVP", mvp);
         renderer.Draw(va, ib, shader);
-          
-        
-        
-        
 
 
-       
+
+
+
+
+
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -155,7 +155,7 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
-  
+
     glfwTerminate();
     return 0;
 }
