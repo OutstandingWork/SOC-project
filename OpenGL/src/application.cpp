@@ -29,7 +29,8 @@ bool firstMouse = true;
 float lastX = 800.0f / 2.0;
 float lastY = 600.0f / 2.0;
 
-
+//lighting posn
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
@@ -117,144 +118,79 @@ int main(void)
         cout << "Error!" << endl;
     cout << glGetString(GL_VERSION) << endl;
 
+    Shader lightingShader("res/shaders/Basic1.shader");
+    Shader lightCubeShader("res/shaders/Basic2.shader");
+
     glDisable(GL_CULL_FACE);
-    float position[] = { -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
 
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
 
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f, -0.5f,
 
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f };
-
-    glm::vec3 cubePositions[] = {
-    glm::vec3(0.0f,  0.0f,  0.0f),
-    glm::vec3(2.0f,  5.0f, -15.0f),
-    glm::vec3(-1.5f, -2.2f, -2.5f),
-    glm::vec3(-3.8f, -2.0f, -12.3f),
-    glm::vec3(2.4f, -0.4f, -3.5f),
-    glm::vec3(-1.7f,  3.0f, -7.5f),
-    glm::vec3(1.3f, -2.0f, -2.5f),
-    glm::vec3(1.5f,  2.0f, -2.5f),
-    glm::vec3(1.5f,  0.2f, -1.5f),
-    glm::vec3(-1.3f,  1.0f, -1.5f)
+        -0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
     };
 
+    unsigned int VBO, cubeVAO;
+    glGenVertexArrays(1, &cubeVAO);
+    glGenBuffers(1, &VBO);
 
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    unsigned int indices[] = {  // Front face
-        0, 1, 2,
-        2, 3, 0,
+    glBindVertexArray(cubeVAO);
 
-        // Right face
-        1, 5, 6,
-        6, 2, 1,
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
-        // Back face
-        7, 6, 5,
-        5, 4, 7,
+    // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
+    unsigned int lightCubeVAO;
+    glGenVertexArrays(1, &lightCubeVAO);
+    glBindVertexArray(lightCubeVAO);
 
-        // Left face
-        4, 0, 3,
-        3, 7, 4,
+    // we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-        // Bottom face
-        4, 5, 1,
-        1, 0, 4,
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
-        // Top face
-        3, 2, 6,
-        6, 7, 3
-    
-};
-    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-    glEnable(GL_BLEND);
-
-    unsigned int vao;
-    GLCall(glGenVertexArrays(1, &vao));
-    GLCall(glBindVertexArray(vao));
-
-
-    VertexArray va;
-    VertexBuffer vb(position, 24 * 5 * sizeof(float));
-    VertexBufferLayout layout;
-
-
-
-    layout.Push<float>(3); //Position attribute
-    layout.Push<float>(2); // Texture coordinate attribute
-    va.AddBuffer(vb, layout);
-
-
-
-
-
-    IndexBuffer ib(indices, 36);
    
-    
-    
-
-    Shader shader("res/shaders/Basic.shader");
-    shader.Bind();
-    shader.SetUniform4f("u_Color", 0.8, 0.3f, 0.8f, 1.0f);
-
-    Texture texture("res/textures/Proj stage 3.png");
-    texture.Bind();
-    shader.SetUniform1i("u_Texture", 0);
-    
-
-    va.Unbind();
-    shader.Unbind();
-    vb.Unbind();
-    ib.Unbind();
-
-    Renderer1 renderer;
-
-    unsigned int a;
-    glGenBuffers(1, &a);
-
-    glBindVertexArray(0);
-    glUseProgram(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    
-
-
-    Renderer1 renderer1;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -266,49 +202,68 @@ int main(void)
 
         processInput(window);
        
-        /* Render here */
-        renderer1.clear();
+        
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
 
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
         glViewport(0, 0, width, height);
 
-       
+        lightingShader.Bind();
+        lightingShader.SetUniform4f("objectColor", 0.3, 0.3f, 0.8f, 1.0f);
+        lightingShader.SetUniform4f("lightColor", 0.3, 0.3f, 0.8f, 1.0f);
 
-        glm::mat4 proj = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
-        shader.SetUniformMat4f("projection", proj);
-
+        // view/projection transformations
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        shader.SetUniformMat4f("view", view);
+        lightingShader.SetUniformMat4f("projection", projection);
+        lightingShader.SetUniformMat4f("view", view);
+       
+        // world transformation
+        glm::mat4 model = glm::mat4(1.0f);
+        lightingShader.SetUniformMat4f("model", model);
+
+        // render the cube
+        glBindVertexArray(cubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+       
+        // also draw the lamp object
+        lightCubeShader.Bind();
+        lightCubeShader.SetUniformMat4f("projection", projection);
+        lightCubeShader.SetUniformMat4f("view", view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+        lightCubeShader.SetUniformMat4f("model", model);
+
+        glBindVertexArray(lightCubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
         
-        for (int i = 0; i < 10; i++)
-        {
 
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            shader.SetUniformMat4f("model", model);
            
             
             
 
+        glDeleteVertexArrays(1, &cubeVAO);
+        glDeleteVertexArrays(1, &lightCubeVAO);
+        glDeleteBuffers(1, &VBO);
 
 
 
 
-
-
-
-            shader.Bind();
-            shader.SetUniform4f("u_Color", 0.9, 0.3f, 0.8f, 1.0f);
 
 
            
-            renderer.Draw(va, ib, shader);
+
+           
+            
 
 
-        }
+        
 
 
 
@@ -328,12 +283,3 @@ int main(void)
 
 
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-
-
-// glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
-
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
