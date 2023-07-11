@@ -6,13 +6,16 @@ layout(location = 1) in vec2 texCoord;
 
 out vec2 v_TexCoord;
 
-uniform mat4 u_MVP;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
 
 void main()
 {
     vec4 transformedPosition = position;
     transformedPosition.y -= 1.0; // Adjust y-coordinate to position image on the floor
-    gl_Position = u_MVP * transformedPosition;
+    gl_Position = projection*view*model * transformedPosition;
     v_TexCoord = texCoord;
 }
 

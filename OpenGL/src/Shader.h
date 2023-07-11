@@ -11,6 +11,8 @@
 #include "VertexArray.h"
 #include <unordered_map>
 #include "glm/glm.hpp"
+#include <glm/gtc/type_ptr.hpp>
+
 struct ShaderProgramSource
 {
     std::string VertexSource;
