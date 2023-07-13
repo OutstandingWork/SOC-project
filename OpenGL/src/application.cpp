@@ -95,7 +95,7 @@ int main(void)
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
 
-    
+
 
     if (!window)
     {
@@ -190,42 +190,37 @@ int main(void)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-   
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
-        
+
 
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
         processInput(window);
-       
-        
+
+
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
 
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
         glViewport(0, 0, width, height);
 
         lightingShader.Bind();
-
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-
-        lightingShader.SetUniformMat4f("projection", projection);
-        lightingShader.SetUniformMat4f("view", view);
-
         lightingShader.SetUniform4f("objectColor", 0.3, 0.3f, 0.8f, 1.0f);
         lightingShader.SetUniform4f("lightColor", 0.3, 0.3f, 0.8f, 1.0f);
 
         // view/projection transformations
-        
-        
-       
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        lightingShader.SetUniformMat4f("projection", projection);
+        lightingShader.SetUniformMat4f("view", view);
+
         // world transformation
         glm::mat4 model = glm::mat4(1.0f);
         lightingShader.SetUniformMat4f("model", model);
@@ -233,44 +228,43 @@ int main(void)
         // render the cube
         glBindVertexArray(cubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-       
+
         // also draw the lamp object
-        
-        
+        lightCubeShader.Bind();
+        lightCubeShader.SetUniformMat4f("projection", projection);
+        lightCubeShader.SetUniformMat4f("view", view);
         model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
         lightCubeShader.SetUniformMat4f("model", model);
-        lightingShader.SetUniform4f("objectColor", 0.3f, 0.5f, 0.1f, 1.0f);
-        lightingShader.SetUniform4f("lightColor", 0.3f, 0.3f, 0.5f, 1.0f);
 
         glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-        
-
-           
-            
-            
-
-       
 
 
 
 
 
-           
-
-           
-            
-
-
-        
 
 
 
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
