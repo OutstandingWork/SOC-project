@@ -212,14 +212,19 @@ int main(void)
         glViewport(0, 0, width, height);
 
         lightingShader.Bind();
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+
+        lightingShader.SetUniformMat4f("projection", projection);
+        lightingShader.SetUniformMat4f("view", view);
+
         lightingShader.SetUniform4f("objectColor", 0.3, 0.3f, 0.8f, 1.0f);
         lightingShader.SetUniform4f("lightColor", 0.3, 0.3f, 0.8f, 1.0f);
 
         // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-        lightingShader.SetUniformMat4f("projection", projection);
-        lightingShader.SetUniformMat4f("view", view);
+        
+        
        
         // world transformation
         glm::mat4 model = glm::mat4(1.0f);
@@ -230,13 +235,14 @@ int main(void)
         glDrawArrays(GL_TRIANGLES, 0, 36);
        
         // also draw the lamp object
-        lightCubeShader.Bind();
-        lightCubeShader.SetUniformMat4f("projection", projection);
-        lightCubeShader.SetUniformMat4f("view", view);
+        
+        
         model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
         lightCubeShader.SetUniformMat4f("model", model);
+        lightingShader.SetUniform4f("objectColor", 0.3f, 0.5f, 0.1f, 1.0f);
+        lightingShader.SetUniform4f("lightColor", 0.3f, 0.3f, 0.5f, 1.0f);
 
         glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -248,10 +254,7 @@ int main(void)
             
             
 
-        glDeleteVertexArrays(1, &cubeVAO);
-        glDeleteVertexArrays(1, &lightCubeVAO);
-        glDeleteBuffers(1, &VBO);
-
+       
 
 
 
@@ -275,6 +278,10 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
+    glDeleteVertexArrays(1, &cubeVAO);
+    glDeleteVertexArrays(1, &lightCubeVAO);
+    glDeleteBuffers(1, &VBO);
+
 
 
     glfwTerminate();
