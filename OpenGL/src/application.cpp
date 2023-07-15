@@ -208,14 +208,29 @@ int main(void)
 
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT );
 
         //change the light's posn values over time
-        lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-        lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
+       // lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
+       // lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
 
         // be sure to activate shader when setting uniforms/drawing objects
         lightingShader.Bind();
+
+        glm::vec3 lightColor;
+        lightColor.x = sin(glfwGetTime() * 2.0f);
+        lightColor.y = sin(glfwGetTime() * 0.7f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);
+
+        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+        lightingShader.SetUniformMat3f("light.ambient",ambientColor );
+        lightingShader.SetUniformMat3f("light.diffuse",diffuseColor ); // darken diffuse light a bit
+        lightingShader.SetUniform3f("light.specular", 1.0f, 1.0f, 0.0f);
+        lightingShader.SetUniform3f("material.ambient", 1.0f, 0.5f, 0.31f);
+        lightingShader.SetUniform3f("material.diffuse", 1.0f, 0.5f, 0.31f);
+        lightingShader.SetUniform3f("material.specular", 0.2f, 0.2f, 0.2f);
+        lightingShader.SetUniform1f("material.shininess", 256.0f);
         lightingShader.SetUniform3f("objectColor", 1.0f, 0.5f, 0.31f);
         lightingShader.SetUniform3f("lightColor", 1.0f, 1.0f, 1.0f);
         lightingShader.SetUniformMat3f("lightPos", lightPos);
