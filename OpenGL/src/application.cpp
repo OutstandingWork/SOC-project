@@ -118,52 +118,55 @@ int main(void)
         cout << "Error!" << endl;
     cout << glGetString(GL_VERSION) << endl;
 
-    Shader lightingShader("res/shaders/Basic1.shader");
+
+
+    Shader lightingShader("res/shaders/LightingMaps.shader");
     Shader lightCubeShader("res/shaders/Basic2.shader");
 
     glDisable(GL_CULL_FACE);
     float vertices[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        // positions          // normals           // texture coords
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
     unsigned int VBO, cubeVAO;
@@ -176,12 +179,16 @@ int main(void)
     glBindVertexArray(cubeVAO);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    //Texture Attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
     unsigned int lightCubeVAO;
@@ -191,8 +198,17 @@ int main(void)
     // we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    //load Textures from image
+    Texture texture("res/textures/container2.png");
+
+    lightingShader.Bind();
+    lightingShader.SetUniform1i("material.diffuse", 0);
+    
+    
+    
 
     lightingShader.SetUniformMat3f("lightPos", lightPos);
     /* Loop until the user closes the window */
@@ -216,30 +232,17 @@ int main(void)
 
         // be sure to activate shader when setting uniforms/drawing objects
         lightingShader.Bind();
-
-        glm::vec3 lightColor;
-        lightColor.x = sin(glfwGetTime() * 2.0f);
-        lightColor.y = sin(glfwGetTime() * 0.7f);
-        lightColor.z = sin(glfwGetTime() * 1.3f);
-
-        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
-        lightingShader.SetUniformMat3f("light.ambient",ambientColor );
-        lightingShader.SetUniformMat3f("light.diffuse",diffuseColor ); // darken diffuse light a bit
-        lightingShader.SetUniform3f("light.specular", 1.0f, 1.0f, 0.0f);
-        lightingShader.SetUniform3f("material.ambient", 1.0f, 0.5f, 0.31f);
-        lightingShader.SetUniform3f("material.diffuse", 1.0f, 0.5f, 0.31f);
-        lightingShader.SetUniform3f("material.specular", 0.2f, 0.2f, 0.2f);
-        lightingShader.SetUniform1f("material.shininess", 256.0f);
-        lightingShader.SetUniform3f("objectColor", 1.0f, 0.5f, 0.31f);
-        lightingShader.SetUniform3f("lightColor", 1.0f, 1.0f, 1.0f);
-        lightingShader.SetUniformMat3f("lightPos", lightPos);
+        lightingShader.SetUniformMat3f("light.position", lightPos);
         lightingShader.SetUniformMat3f("viewPos", camera.Position);
-        int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
-        glViewport(0, 0, width, height);
 
-       
+        // light properties
+        lightingShader.SetUniform3f("light.ambient", 0.2f, 0.2f, 0.2f);
+        lightingShader.SetUniform3f("light.diffuse", 0.5f, 0.5f, 0.5f);
+        lightingShader.SetUniform3f("light.specular", 1.0f, 1.0f, 1.0f);
+
+        // material properties
+        lightingShader.SetUniform3f("material.specular", 0.5f, 0.5f, 0.5f);
+        lightingShader.SetUniform1f("material.shininess", 64.0f);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -251,9 +254,15 @@ int main(void)
         glm::mat4 model = glm::mat4(1.0f);
         lightingShader.SetUniformMat4f("model", model);
 
+        // bind diffuse map
+        texture.Bind();
+
+        
+
         // render the cube
         glBindVertexArray(cubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
 
         // also draw the lamp object
         lightCubeShader.Bind();
