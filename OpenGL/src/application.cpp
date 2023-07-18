@@ -206,6 +206,7 @@ int main(void)
 
     lightingShader.Bind();
     lightingShader.SetUniform1i("material.diffuse", 0);
+    lightingShader.SetUniform1i("material.specular", 1);
     
     
     
@@ -275,30 +276,6 @@ int main(void)
 
         glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         /* Swap front and back buffers */
