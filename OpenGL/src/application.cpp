@@ -168,7 +168,19 @@ int main(void)
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
-
+    //positions of containers
+    glm::vec3 cubePositions[] = {
+        glm::vec3(0.0f,  0.0f,  0.0f),
+        glm::vec3(2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),
+        glm::vec3(1.5f,  2.0f, -2.5f),
+        glm::vec3(1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
     unsigned int VBO, cubeVAO;
     glGenVertexArrays(1, &cubeVAO);
     glGenBuffers(1, &VBO);
@@ -225,7 +237,7 @@ int main(void)
 
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT );
+        glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 
         //change the light's posn values over time
        // lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
@@ -233,7 +245,7 @@ int main(void)
 
         // be sure to activate shader when setting uniforms/drawing objects
         lightingShader.Bind();
-        lightingShader.SetUniformMat3f("light.position", lightPos);
+        lightingShader.SetUniform3f("light.direction", -0.2f,-1.0f,-0.3f);
         lightingShader.SetUniformMat3f("viewPos", camera.Position);
 
         // light properties
@@ -242,7 +254,7 @@ int main(void)
         lightingShader.SetUniform3f("light.specular", 1.0f, 1.0f, 1.0f);
 
         // material properties
-        lightingShader.SetUniform3f("material.specular", 0.5f, 0.5f, 0.5f);
+       
         lightingShader.SetUniform1f("material.shininess", 64.0f);
 
         // view/projection transformations
@@ -262,20 +274,31 @@ int main(void)
 
         // render the cube
         glBindVertexArray(cubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
 
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        for (unsigned int i = 0; i < 10; i++)
+        {
+            // calculate the model matrix for each object and pass it to shader before drawing
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            float angle = 20.0f * i;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            lightingShader.SetUniformMat4f("model", model);
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         // also draw the lamp object
-        lightCubeShader.Bind();
-        lightCubeShader.SetUniformMat4f("projection", projection);
-        lightCubeShader.SetUniformMat4f("view", view);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        lightCubeShader.SetUniformMat4f("model", model);
+       // lightCubeShader.Bind();
+        //lightCubeShader.SetUniformMat4f("projection", projection);
+        //lightCubeShader.SetUniformMat4f("view", view);
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, lightPos);
+        //model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+        //lightCubeShader.SetUniformMat4f("model", model);
 
-        glBindVertexArray(lightCubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glBindVertexArray(lightCubeVAO);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
         /* Swap front and back buffers */
