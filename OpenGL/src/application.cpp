@@ -215,6 +215,7 @@ int main(void)
 
     //load Textures from image
     Texture texture("res/textures/container2.png");
+    Texture texture1("res/textures/container2_specular.png");
 
     lightingShader.Bind();
     lightingShader.SetUniform1i("material.diffuse", 0);
@@ -268,7 +269,8 @@ int main(void)
         lightingShader.SetUniformMat4f("model", model);
 
         // bind diffuse map
-        texture.Bind();
+        texture.Bind(0);
+        texture1.Bind(1);
 
         
 
