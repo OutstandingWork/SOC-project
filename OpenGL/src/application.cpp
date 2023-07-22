@@ -214,7 +214,7 @@ int main(void)
     glEnableVertexAttribArray(0);
 
     //load Textures from image
-    Texture texture("res/textures/container2.png");
+   //Texture texture("res/textures/container2.png");
     Texture texture1("res/textures/container2_specular.png");
 
     lightingShader.Bind();
@@ -224,7 +224,7 @@ int main(void)
     
     
 
-    lightingShader.SetUniformMat3f("lightPos", lightPos);
+    
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -246,17 +246,21 @@ int main(void)
 
         // be sure to activate shader when setting uniforms/drawing objects
         lightingShader.Bind();
-        lightingShader.SetUniform3f("light.direction", -0.2f,-1.0f,-0.3f);
+        lightingShader.SetUniformMat3f("light.position", lightPos);
         lightingShader.SetUniformMat3f("viewPos", camera.Position);
 
         // light properties
         lightingShader.SetUniform3f("light.ambient", 0.2f, 0.2f, 0.2f);
         lightingShader.SetUniform3f("light.diffuse", 0.5f, 0.5f, 0.5f);
         lightingShader.SetUniform3f("light.specular", 1.0f, 1.0f, 1.0f);
+        lightingShader.SetUniform1f("light.constant", 1.0f);
+        lightingShader.SetUniform1f("light.linear", 0.09f);
+        lightingShader.SetUniform1f("light.quadratic", 0.032f);
+
 
         // material properties
        
-        lightingShader.SetUniform1f("material.shininess", 64.0f);
+        lightingShader.SetUniform1f("material.shininess", 32.0f);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -268,14 +272,10 @@ int main(void)
         glm::mat4 model = glm::mat4(1.0f);
         lightingShader.SetUniformMat4f("model", model);
 
-        // bind diffuse map
-        texture.Bind(0);
-        texture1.Bind(1);
 
         
 
-        // render the cube
-        glBindVertexArray(cubeVAO);
+        
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
         for (unsigned int i = 0; i < 10; i++)
@@ -287,20 +287,29 @@ int main(void)
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             lightingShader.SetUniformMat4f("model", model);
 
+
+            // bind diffuse map
+           //texture.Bind(0);
+           texture1.Bind(1);
+
+
+            // render the cube
+            glBindVertexArray(cubeVAO);
+
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
         // also draw the lamp object
-       // lightCubeShader.Bind();
-        //lightCubeShader.SetUniformMat4f("projection", projection);
-        //lightCubeShader.SetUniformMat4f("view", view);
-        //model = glm::mat4(1.0f);
-        //model = glm::translate(model, lightPos);
-        //model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        //lightCubeShader.SetUniformMat4f("model", model);
+       lightCubeShader.Bind();
+        lightCubeShader.SetUniformMat4f("projection", projection);
+        lightCubeShader.SetUniformMat4f("view", view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+        lightCubeShader.SetUniformMat4f("model", model);
 
-        //glBindVertexArray(lightCubeVAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(lightCubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
         /* Swap front and back buffers */
