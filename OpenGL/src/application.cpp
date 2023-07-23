@@ -123,7 +123,7 @@ int main(void)
     Shader lightingShader("res/shaders/LightingMaps.shader");
     Shader lightCubeShader("res/shaders/Basic2.shader");
 
-    glDisable(GL_CULL_FACE);
+   // glEnable(GL_CULL_FACE);
     float vertices[] = {
         // positions          // normals           // texture coords
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
@@ -214,7 +214,7 @@ int main(void)
     glEnableVertexAttribArray(0);
 
     //load Textures from image
-   //Texture texture("res/textures/container2.png");
+   Texture texture("res/textures/container2.png");
     Texture texture1("res/textures/container2_specular.png");
 
     lightingShader.Bind();
@@ -246,17 +246,20 @@ int main(void)
 
         // be sure to activate shader when setting uniforms/drawing objects
         lightingShader.Bind();
-        lightingShader.SetUniformMat3f("light.position", lightPos);
+        lightingShader.SetUniformMat3f("light.position", camera.Position);
+        lightingShader.SetUniformMat3f("light.direction", camera.Front);
+        lightingShader.SetUniform1f("light.cutoff", glm::cos(glm::radians(12.5f)));
         lightingShader.SetUniformMat3f("viewPos", camera.Position);
 
         // light properties
-        lightingShader.SetUniform3f("light.ambient", 0.2f, 0.2f, 0.2f);
-        lightingShader.SetUniform3f("light.diffuse", 0.5f, 0.5f, 0.5f);
+        lightingShader.SetUniform3f("light.ambient", 0.1f, 0.1f, 0.1f);
+        lightingShader.SetUniform3f("light.diffuse", 0.8f, 0.8f, 0.8f);
         lightingShader.SetUniform3f("light.specular", 1.0f, 1.0f, 1.0f);
         lightingShader.SetUniform1f("light.constant", 1.0f);
         lightingShader.SetUniform1f("light.linear", 0.09f);
         lightingShader.SetUniform1f("light.quadratic", 0.032f);
-
+        
+       
 
         // material properties
        
@@ -289,7 +292,7 @@ int main(void)
 
 
             // bind diffuse map
-           //texture.Bind(0);
+           texture.Bind(0);
            texture1.Bind(1);
 
 
@@ -300,16 +303,16 @@ int main(void)
         }
 
         // also draw the lamp object
-       lightCubeShader.Bind();
-        lightCubeShader.SetUniformMat4f("projection", projection);
-        lightCubeShader.SetUniformMat4f("view", view);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        lightCubeShader.SetUniformMat4f("model", model);
+       //lightCubeShader.Bind();
+       // lightCubeShader.SetUniformMat4f("projection", projection);
+       // lightCubeShader.SetUniformMat4f("view", view);
+      //  model = glm::mat4(1.0f);
+      //  model = glm::translate(model, lightPos);
+      //  model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+      //  lightCubeShader.SetUniformMat4f("model", model);
 
-        glBindVertexArray(lightCubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+      //  glBindVertexArray(lightCubeVAO);
+       // glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
         /* Swap front and back buffers */
